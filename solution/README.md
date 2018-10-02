@@ -1,0 +1,6 @@
+I've used React (webpack config) to complete this test. To run the app, first run the server.jar in the "backend" folder, access the "solution" folder and type "npm install" to install all the dependencies needed to run it and then "npm run start" to launch it.
+As long as the server API will mantain this structure (array of objects), so that the GET request will fetch both the values and the timestamp (value1, value2, timestamp), the app won't break.
+Regarding the solution, I've made a GET call as soon as the app component loaded and assign the response data to a variable in the state. Then, I've used loops to fetch the informations I needed to display each values for that time. Every minute has a couple of values and the timestamp, so I made a filter to display the last 6 hours as default (displayed with a 10 minutes interval).
+I built a select component to handle the date filter so the app can display infos depending on the limit you give (6 hours, 24 hours, a week, a month, 3 months).
+Finally I made a PUT call to send the new values back to the backend, giving the new object (time, value1, value2 and id) as a response body.
+I've used axios to make https request to the API and CanvasJS to design and build the chart. It works with datapoints that the app change dynamically every time a value is edited in the frontend or in the backend.

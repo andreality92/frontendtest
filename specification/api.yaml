@@ -1,0 +1,105 @@
+openapi: 3.0.1
+info:
+  title: Readings API
+  description: >-
+    REST API for the front end developer test.  This API exposes a series of fictional "readings" of two values.
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  /reading:
+    get:
+      summary: >-
+        Lists all the reading objects between the <start> and <end> timestamps (inclusive).
+        An offset and limit parameter can be supplied if necessary.
+      parameters:
+        - in: query
+          name: start
+          schema:
+            type: string
+            format: date-time
+          description: optional start timestamp in iso8601 format without timezone (ex. 1970-01-01T00:00:00)
+          example: '1970-01-01T00:00:00'  
+        - in: query
+          name: end
+          schema:
+            type: string
+            format: date-time
+          description: optional end timestamp in iso8601 format without timezone (ex. 2070-01-01T00:00:00)
+          example: '2070-01-01T00:00:00'
+        - in: query
+          name: offset
+          schema:
+            type: number
+          description: the number of items to skip from the beginning of the collection (optional)
+        - in: query
+          name: limit
+          schema:
+            type: number
+          description: the total number of items to be returned (optional)
+        
+      responses:
+        '200':
+          description: successful response
+          headers:
+            X-Total-Count:
+              schema:
+                type: number
+              description: the total number of records within the start/end range, before offset and limit are applied
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/reading'
+        '400':
+          description: error parsing request parameters, remember that the start/end dates should be formatted as ISO8601 *without* timezone
+        '500':
+          description: server error ocurred, please send a copy of the request and any server logs via email
+    put:
+      summary: >-
+        Updates a reading's values
+      requestBody:
+        description: the reading object to be updated.  Only value1 and value2 are updated, any modification on the timestamp is ignored.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reading'
+      responses:
+        '200':
+          description: reading updated
+        '400':
+          description: the requested reading was not found
+        '500':
+          description: server error ocurred, please send a copy of the request and any server logs via email
+
+components:
+  schemas:
+    reading:
+      type: object
+      required:
+        - id
+        - timestamp
+        - value1
+        - value2
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the reading
+          example: '34114e6f-75d6-481e-a306-bea345b55002'
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 formatted date time *WITHOUT* time zone
+          example: '2018-09-21T16:50:00'
+        value1:
+          type: number
+          format: float
+          description: value 1 of the reading
+          example: 3.21
+        value2:
+          type: number
+          format: float
+          description: value 2 of the reading
+          example: 8.53
